@@ -45,6 +45,12 @@ The workflow is triggered on each push to the `main` branch.
 
 - The `.git` directory is removed from the extracted code to avoid overwriting existing repository data.
 - This workflow is designed to be triggered automatically on each push to the `main` branch.
+  
+### Additional Notes
+
+- **Important Note:** The workflow assumes that the repository is initially empty. If you encounter conflicts or unexpected behavior, ensure that the repository is empty before running the workflow. Existing files, especially untracked or modified ones, can cause conflicts during the extraction and deployment process.
+
+- The `.git` directory is removed from the extracted code to avoid overwriting existing repository data.
 
 ### Author
 
