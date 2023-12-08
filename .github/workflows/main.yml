@@ -1,0 +1,38 @@
+name: Extract Code and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  extract_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Extract Code from Docker Image
+      run: |
+        docker create --name my-web-app-container medanes/retroverse_pipeline:latest
+        mkdir extracted-code
+        # Copy everything except .git
+        docker cp my-web-app-container:/app/. extracted-code/
+        docker rm my-web-app-container
+
+    - name: Configure Git
+      run: |
+        git config --global user.email "user@user.com"
+        git config --global user.name "user1"
+
+    - name: Commit and Push Extracted Code
+      run: |
+        cd extracted-code
+        rm -rf .git  # Remove the .git directory to avoid overwriting existing repository data
+        git init
+        git add .
+        git commit -m "Initial commit extracted from Docker image"
+        git branch -M main
+        git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        git push -u --force origin main
