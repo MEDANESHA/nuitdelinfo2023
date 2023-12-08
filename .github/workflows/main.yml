@@ -21,18 +21,19 @@ jobs:
         docker cp my-web-app-container:/app/. extracted-code/
         docker rm my-web-app-container
 
-    - name: Configure Git and Commit Changes
+    - name: Configure Git
+      run: |
+        git config --global user.email "user@user.com"
+        git config --global user.name "user1"
+
+    - name: Commit and Push Extracted Code
       run: |
         cd extracted-code
         rm -rf .git  # Remove the .git directory to avoid overwriting existing repository data
         git init
-        git config --global user.email "user@user.com"
-        git config --global user.name "user1"
+        git pull origin main https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git add .
         git commit -m "Initial commit extracted from Docker image"
-
-    - name: Push Changes to GitHub
-      run: |
-        git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git branch -M main
+        git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git push -u --force origin main
