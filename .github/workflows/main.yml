@@ -35,4 +35,4 @@ jobs:
       run: |
         git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git branch -M main
-        git push -u origin main
+        git push -u --force origin main
