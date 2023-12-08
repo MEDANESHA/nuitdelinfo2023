@@ -31,6 +31,7 @@ jobs:
         cd extracted-code
         rm -rf .git  # Remove the .git directory to avoid overwriting existing repository data
         git init
+        git pull origin main
         git add .
         git commit -m "Initial commit extracted from Docker image"
         git branch -M main
